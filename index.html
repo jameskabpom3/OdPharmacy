@@ -21,58 +21,93 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Admin Form */
-        .admin-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 6px solid var(--primary); transition: 0.3s; }
+        .admin-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 6px solid var(--primary); }
         .admin-box.edit-mode { border-top-color: var(--edit); background: #fffcf5; }
         .input-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #666; }
         input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; }
-        input:focus, textarea:focus { border-color: var(--primary); }
         
-        /* Manage Photos in Edit Mode */
         .edit-photos-preview { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; padding: 15px; background: #f0f0f0; border-radius: 10px; display: none; }
-        .thumb-edit { width: 90px; height: 90px; position: relative; border-radius: 8px; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .thumb-edit { width: 90px; height: 90px; position: relative; border-radius: 8px; overflow: hidden; border: 2px solid white; }
         .thumb-edit img { width: 100%; height: 100%; object-fit: cover; }
-        .remove-img-btn { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .remove-img-btn { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        .btn-action { background: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
-        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 1.1rem; }
         .btn-cancel { background: #95a5a6; color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; margin-top: 10px; display: none; }
 
-        /* Responsive Product Grid */
+        /* Responsive Grid */
         .product-grid { display: grid; gap: 15px; grid-template-columns: repeat(2, 1fr); }
         @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
         @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); cursor: pointer; position: relative; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card img { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #eee; }
         .card-body { padding: 12px; text-align: center; }
         .card-body h3 { margin: 0; font-size: 1rem; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .action-btns { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; z-index: 5; }
-        .del-btn, .edit-btn { color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; }
+        /* Admin Controls */
+        .admin-controls { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; z-index: 5; }
+        .del-btn, .edit-btn { color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .del-btn { background: var(--danger); }
         .edit-btn { background: var(--edit); }
 
-        /* Full Responsive Modal & Slider */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: flex-start; padding: 15px; overflow-y: auto; box-sizing: border-box; }
-        .modal-content { background: white; width: 100%; max-width: 1000px; border-radius: 20px; overflow: hidden; position: relative; margin: auto; animation: slideUp 0.3s ease-out; }
+        /* MODAL - แก้ไขปุ่มปิดให้คงที่และชัดเจน */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); 
+            justify-content: center; 
+            align-items: center; 
+            padding: 15px; 
+            box-sizing: border-box; 
+        }
+        .modal-content { 
+            background: white; 
+            width: 100%; 
+            max-width: 900px; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            position: relative; 
+            animation: slideUp 0.3s ease-out; 
+            display: flex;
+            flex-direction: column;
+        }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .close-btn { position: absolute; top: 15px; right: 15px; width: 42px; height: 42px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2100; color: #333; font-size: 22px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        /* ปุ่มปิดใหม่ - อยู่ที่มุมขวาบนของเนื้อหา และมีพื้นหลังชัดเจน */
+        .close-btn { 
+            position: absolute; 
+            top: 15px; 
+            right: 15px; 
+            width: 40px; 
+            height: 40px; 
+            background: white; 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer; 
+            z-index: 2200; 
+            color: #333; 
+            font-size: 24px; 
+            border: none; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            line-height: 1;
+        }
+        .close-btn:hover { background: #f0f0f0; transform: scale(1.1); }
+
+        .slider-box { width: 100%; background: #000; position: relative; display: flex; align-items: center; justify-content: center; min-height: 300px; touch-action: pan-y; }
+        .slider-box img { width: 100%; height: auto; max-height: 70vh; object-fit: contain; transition: opacity 0.2s ease-out; }
         
-        .slider-box { width: 100%; background: #000; position: relative; display: flex; align-items: center; justify-content: center; min-height: 300px; touch-action: pan-y; overflow: hidden; }
-        @media (min-width: 768px) { .slider-box { min-height: 500px; } }
-        .slider-box img { width: 100%; height: auto; max-height: 75vh; object-fit: contain; transition: opacity 0.2s ease-out; user-select: none; -webkit-user-drag: none; }
+        .info-box { padding: 25px; max-height: 25vh; overflow-y: auto; background: white; }
+        .info-box h2 { color: var(--primary); margin: 0 0 10px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; font-size: 1.4rem; }
+        .info-box p { color: #444; line-height: 1.6; white-space: pre-wrap; font-size: 1rem; }
 
-        .info-box { padding: 25px; }
-        .info-box h2 { color: var(--primary); margin: 0 0 15px 0; font-size: 1.6rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
-        .info-box p { color: #444; line-height: 1.8; white-space: pre-wrap; font-size: 1.05rem; margin-bottom: 0; }
-
-        .slide-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.15); color: white; border: none; padding: 20px 12px; cursor: pointer; font-size: 24px; transition: 0.3s; z-index: 10; border-radius: 5px; }
+        .slide-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; padding: 20px 12px; cursor: pointer; font-size: 24px; z-index: 10; border-radius: 5px; }
         .slide-nav:hover { background: rgba(255,255,255,0.8); color: black; }
-        .prev { left: 10px; }
-        .next { right: 10px; }
     </style>
 </head>
 <body>
@@ -87,36 +122,33 @@
 
 <div class="container">
     <section id="homePage" class="page active">
-        <h2 style="text-align: center; margin-bottom: 25px;">รายการสินค้าและยา</h2>
+        <h2 style="text-align: center; margin-bottom: 25px;">รายการสินค้า</h2>
         <div class="product-grid" id="gridCustomer"></div>
     </section>
 
     <section id="adminPage" class="page">
         <div class="admin-box" id="adminBox">
             <h3 id="formTitle">⚙️ เพิ่มสินค้าใหม่</h3>
-            
             <div id="editPhotosPreview" class="edit-photos-preview"></div>
-
             <div class="input-group">
                 <label>ชื่อสินค้า</label>
-                <input type="text" id="pName" placeholder="ระบุชื่อเรียกสินค้า">
+                <input type="text" id="pName">
             </div>
             <div class="input-group">
-                <label id="fileLabel">เลือกรูปภาพ (เลือกพร้อมกันได้หลายรูป)</label>
+                <label id="fileLabel">เลือกรูปภาพ (เลือกหลายรูปได้)</label>
                 <input type="file" id="pImages" accept="image/*" multiple>
             </div>
             <div class="input-group">
-                <label>รายละเอียดสินค้า</label>
-                <textarea id="pDesc" rows="4" placeholder="ระบุรายละเอียด, สรรพคุณ..."></textarea>
+                <label>รายละเอียด</label>
+                <textarea id="pDesc" rows="4"></textarea>
             </div>
-            
             <button class="btn-action" id="btnMainAction" onclick="handleUpload()">🚀 อัปโหลดข้อมูล</button>
             <button class="btn-cancel" id="btnCancelEdit" onclick="cancelEdit()">❌ ยกเลิกการแก้ไข</button>
-
-            <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
-                <label>เปลี่ยนรหัสผ่านผู้ดูแล:</label>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <label>เปลี่ยนรหัสผ่าน:</label>
                 <div style="display: flex; gap: 10px;">
-                    <input type="password" id="newPass" placeholder="รหัสผ่านใหม่">
+                    <input type="password" id="newPass" placeholder="รหัสใหม่">
                     <button onclick="changePassword()" style="background: var(--dark); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer;">บันทึก</button>
                 </div>
             </div>
@@ -127,11 +159,12 @@
 
 <div id="itemModal" class="modal" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="close-btn" onclick="closeModal()">✕</button>
+        <button class="close-btn" onclick="closeModal()" aria-label="ปิด">✕</button>
+        
         <div class="slider-box" id="sliderBox">
-            <button id="btnPrev" class="slide-nav prev" onclick="changeSlide(-1)">❮</button>
-            <img id="targetImg" src="" alt="Product Image">
-            <button id="btnNext" class="slide-nav next" onclick="changeSlide(1)">❯</button>
+            <button id="btnPrev" class="slide-nav" style="left:10px" onclick="changeSlide(-1)">❮</button>
+            <img id="targetImg" src="">
+            <button id="btnNext" class="slide-nav" style="right:10px" onclick="changeSlide(1)">❯</button>
         </div>
         <div class="info-box">
             <h2 id="targetTitle"></h2>
@@ -145,7 +178,6 @@
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, setDoc, getDoc, updateDoc } 
     from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
-    // 1. Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyD3UTbmnm6R0drX3eSd4IegA4pT7BVnK_A",
         authDomain: "odean-pharmacy.firebaseapp.com",
@@ -165,40 +197,33 @@
     let editId = null;
     let imagesInEdit = [];
 
-    // ดึงรหัสผ่านปัจจุบัน
     const loadPass = async () => {
         const snap = await getDoc(configRef);
         if (snap.exists()) currentPassword = snap.data().password;
     };
     loadPass();
 
-    // ระบบสลับหน้า
     window.showPage = (p) => {
         document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
         document.getElementById(p + 'Page').classList.add('active');
         document.getElementById('btnNavAdmin').style.display = p === 'home' ? 'block' : 'none';
         document.getElementById('btnNavHome').style.display = p === 'admin' ? 'block' : 'none';
-        window.scrollTo(0,0);
     };
 
     window.promptAdmin = () => {
-        const input = prompt("🔐 กรุณากรอกรหัสผ่าน:");
+        const input = prompt("🔐 รหัสผ่าน:");
         if(input === currentPassword) showPage('admin');
-        else if(input !== null) alert("❌ รหัสผ่านไม่ถูกต้อง");
+        else if(input !== null) alert("ผิด!");
     };
 
     window.changePassword = async () => {
         const np = document.getElementById('newPass').value;
-        if(!np) return alert("กรุณาระบุรหัส");
-        if(confirm("ยืนยันการเปลี่ยนรหัสผ่าน?")) {
+        if(np && confirm("เปลี่ยนรหัส?")) {
             await setDoc(configRef, { password: np });
-            currentPassword = np;
-            alert("เปลี่ยนสำเร็จ!");
-            document.getElementById('newPass').value = "";
+            currentPassword = np; alert("สำเร็จ!");
         }
     };
 
-    // ฟังก์ชันย่อรูปภาพ (Max 1000px)
     async function processFile(file) {
         return new Promise(res => {
             const reader = new FileReader();
@@ -220,17 +245,13 @@
         });
     }
 
-    // จัดการการบันทึก
     window.handleUpload = async () => {
         const name = document.getElementById('pName').value;
         const desc = document.getElementById('pDesc').value;
         const files = document.getElementById('pImages').files;
-
-        if (!name) return alert("ใส่ชื่อสินค้าด้วยครับ");
-        
+        if (!name) return alert("ระบุชื่อสินค้า");
         const btn = document.getElementById('btnMainAction');
         btn.disabled = true;
-        btn.innerText = "⏳ กำลังบันทึกข้อมูล...";
 
         try {
             let newBatch = [];
@@ -238,72 +259,51 @@
                 const promises = Array.from(files).map(f => processFile(f));
                 newBatch = await Promise.all(promises);
             }
-
             const finalImages = [...imagesInEdit, ...newBatch];
-            if (finalImages.length === 0) throw new Error("ต้องมีรูปภาพอย่างน้อย 1 รูป");
+            if (finalImages.length === 0) throw new Error("ต้องการรูปภาพ");
 
             if (editId) {
                 await updateDoc(doc(db, "products", editId), { name, desc, images: finalImages });
-                alert("แก้ไขเรียบร้อย!");
                 cancelEdit();
             } else {
                 await addDoc(colRef, { name, desc, images: finalImages, time: Date.now() });
-                alert("เพิ่มข้อมูลเรียบร้อย!");
                 clearForm();
             }
-        } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
+            alert("บันทึกสำเร็จ");
+        } catch (e) { alert(e.message); }
         btn.disabled = false;
-        btn.innerText = editId ? "💾 บันทึกการแก้ไข" : "🚀 อัปโหลดข้อมูล";
     };
 
     window.startEdit = (e, id, name, desc, imgs) => {
         e.stopPropagation();
-        editId = id;
-        imagesInEdit = [...imgs];
-        
+        editId = id; imagesInEdit = [...imgs];
         document.getElementById('pName').value = name;
         document.getElementById('pDesc').value = desc.replace(/\\n/g, '\n');
-        
-        const container = document.getElementById('editPhotosPreview');
-        container.innerHTML = imagesInEdit.map((img, idx) => `
-            <div class="thumb-edit">
-                <img src="${img}">
-                <button class="remove-img-btn" onclick="removeImgFromEdit(${idx})">✕</button>
-            </div>
-        `).join('');
-        
-        document.getElementById('formTitle').innerText = "✏️ กำลังแก้ไขสินค้า";
-        document.getElementById('btnMainAction').innerText = "💾 บันทึกการแก้ไข";
-        document.getElementById('btnMainAction').style.background = "var(--edit)";
+        renderEditPhotos();
+        document.getElementById('adminBox').classList.add('edit-mode');
         document.getElementById('btnCancelEdit').style.display = "block";
         document.getElementById('editPhotosPreview').style.display = "flex";
-        document.getElementById('adminBox').classList.add('edit-mode');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.removeImgFromEdit = (idx) => {
-        if(imagesInEdit.length <= 1 && document.getElementById('pImages').files.length === 0) {
-            return alert("ต้องเหลือรูปไว้อย่างน้อย 1 รูป");
-        }
-        imagesInEdit.splice(idx, 1);
+    function renderEditPhotos() {
         const container = document.getElementById('editPhotosPreview');
-        container.innerHTML = imagesInEdit.map((img, i) => `
+        container.innerHTML = imagesInEdit.map((img, idx) => `
             <div class="thumb-edit">
-                <img src="${img}">
-                <button class="remove-img-btn" onclick="removeImgFromEdit(${i})">✕</button>
+                <img src="${img}"><button class="remove-img-btn" onclick="removeImgFromEdit(${idx})">✕</button>
             </div>
         `).join('');
+    }
+
+    window.removeImgFromEdit = (i) => {
+        imagesInEdit.splice(i, 1); renderEditPhotos();
     };
 
     window.cancelEdit = () => {
-        editId = null; imagesInEdit = [];
-        clearForm();
-        document.getElementById('formTitle').innerText = "⚙️ เพิ่มสินค้าใหม่";
-        document.getElementById('btnMainAction').innerText = "🚀 อัปโหลดข้อมูล";
-        document.getElementById('btnMainAction').style.background = "var(--primary)";
+        editId = null; imagesInEdit = []; clearForm();
+        document.getElementById('adminBox').classList.remove('edit-mode');
         document.getElementById('btnCancelEdit').style.display = "none";
         document.getElementById('editPhotosPreview').style.display = "none";
-        document.getElementById('adminBox').classList.remove('edit-mode');
     };
 
     function clearForm() {
@@ -312,68 +312,58 @@
         document.getElementById('pImages').value = "";
     }
 
-    // Real-time Update
     onSnapshot(query(colRef, orderBy("time", "desc")), snap => {
         const gc = document.getElementById('gridCustomer');
         const ga = document.getElementById('gridAdmin');
         gc.innerHTML = ga.innerHTML = "";
         snap.docs.forEach(d => {
             const p = d.data(); const id = d.id;
-            const cardInner = `
-                ${adminBtn(p, id)}
-                <img src="${p.images[0]}" loading="lazy">
-                <div class="card-body"><h3>${p.name}</h3></div>
-            `;
-            const c1 = document.createElement('div'); c1.className = 'card'; c1.innerHTML = cardInner;
+            
+            const c1 = document.createElement('div');
+            c1.className = 'card';
+            c1.innerHTML = `<img src="${p.images[0]}" loading="lazy"><div class="card-body"><h3>${p.name}</h3></div>`;
             c1.onclick = () => openModal(p);
             gc.appendChild(c1);
 
-            const c2 = document.createElement('div'); c2.className = 'card'; c2.innerHTML = cardInner;
+            const c2 = document.createElement('div');
+            c2.className = 'card';
+            c2.innerHTML = `
+                <div class="admin-controls">
+                    <button class="edit-btn" onclick="startEdit(event, '${id}', '${p.name}', '${p.desc.replace(/\n/g, '\\n')}', ${JSON.stringify(p.images).replace(/"/g, '&quot;')})">✏️</button>
+                    <button class="del-btn" onclick="deleteItem(event, '${id}')">✕</button>
+                </div>
+                <img src="${p.images[0]}" loading="lazy">
+                <div class="card-body"><h3>${p.name}</h3></div>`;
             c2.onclick = () => openModal(p);
             ga.appendChild(c2);
         });
     });
 
-    function adminBtn(p, id) {
-        return `<div class="action-btns">
-            <button class="edit-btn" onclick="startEdit(event, '${id}', '${p.name}', '${p.desc.replace(/\n/g, '\\n')}', ${JSON.stringify(p.images).replace(/"/g, '&quot;')})">✏️</button>
-            <button class="del-btn" onclick="deleteItem(event, '${id}')">✕</button>
-        </div>`;
-    }
-
     window.deleteItem = async (e, id) => {
         e.stopPropagation();
-        if(confirm("ลบสินค้านี้ใช่ไหม?")) await deleteDoc(doc(db, "products", id));
+        if(confirm("ลบ?")) await deleteDoc(doc(db, "products", id));
     };
 
-    // Modal Slider & Swipe Logic
-    let mImgs = []; let cIdx = 0;
-    let tStart = 0; let tEnd = 0;
-
+    let mImgs = []; let cIdx = 0; let tStart = 0;
     window.openModal = (p) => {
         mImgs = p.images; cIdx = 0;
         document.getElementById('targetTitle').innerText = p.name;
         document.getElementById('targetDesc').innerText = p.desc;
-        document.getElementById('btnPrev').style.display = mImgs.length > 1 ? 'block' : 'none';
-        document.getElementById('btnNext').style.display = mImgs.length > 1 ? 'block' : 'none';
         updateM(); 
         document.getElementById('itemModal').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     };
 
-    window.changeSlide = (n) => {
-        if (mImgs.length <= 1) return;
-        cIdx = (cIdx + n + mImgs.length) % mImgs.length; 
-        updateM(); 
+    window.changeSlide = (n) => { 
+        cIdx = (cIdx + n + mImgs.length) % mImgs.length; updateM(); 
     };
 
     function updateM() {
         const img = document.getElementById('targetImg');
         img.style.opacity = '0.5';
-        setTimeout(() => {
-            img.src = mImgs[cIdx];
-            img.style.opacity = '1';
-        }, 50);
+        setTimeout(() => { img.src = mImgs[cIdx]; img.style.opacity = '1'; }, 50);
+        document.getElementById('btnPrev').style.display = mImgs.length > 1 ? 'block' : 'none';
+        document.getElementById('btnNext').style.display = mImgs.length > 1 ? 'block' : 'none';
     }
 
     window.closeModal = () => {
@@ -381,15 +371,13 @@
         document.body.style.overflow = 'auto';
     };
 
-    // Swipe Event Listeners
     const sBox = document.getElementById('sliderBox');
     sBox.addEventListener('touchstart', e => tStart = e.changedTouches[0].screenX, {passive: true});
     sBox.addEventListener('touchend', e => {
-        tEnd = e.changedTouches[0].screenX;
+        const tEnd = e.changedTouches[0].screenX;
         if (tEnd < tStart - 50) changeSlide(1);
         if (tEnd > tStart + 50) changeSlide(-1);
     }, {passive: true});
-
 </script>
 </body>
 </html>
