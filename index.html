@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odean Pharmacy - Catalog Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    
     <style>
-        :root { --primary: #00a859; --dark: #2c3e50; --bg: #f4f7f6; --edit: #f39c12; --danger: #e74c3c; }
+        :root { --primary: #00a859; --dark: #2c3e50; --bg: #f4f7f6; --edit: #f39c12; --danger: #e74c3c; --map: #3498db; }
         body { font-family: 'Kanit', sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--dark); overflow-x: hidden; }
         
         /* Navigation */
@@ -45,58 +47,31 @@
         .card-body { padding: 12px; text-align: center; }
         .card-body h3 { margin: 0; font-size: 1rem; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* Admin Controls */
+        /* Admin Controls & View Badge */
         .admin-controls { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; z-index: 5; }
         .del-btn, .edit-btn { color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .del-btn { background: var(--danger); }
         .edit-btn { background: var(--edit); }
 
-        /* MODAL - แก้ไขปุ่มปิดให้คงที่และชัดเจน */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 2000; 
-            left: 0; top: 0; 
-            width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); 
-            justify-content: center; 
-            align-items: center; 
-            padding: 15px; 
-            box-sizing: border-box; 
+        .view-badge { margin-top: 8px; font-size: 0.85rem; color: #555; background: #eef2f3; padding: 4px 10px; border-radius: 15px; display: inline-flex; align-items: center; gap: 5px; }
+
+        /* Map Styles */
+        .map-container { height: 300px; width: 100%; border-radius: 10px; z-index: 1; margin-bottom: 10px; border: 2px solid #ddd; }
+        .btn-map-nav {
+            background: var(--map); color: white; border: none; padding: 10px 20px; 
+            border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 1rem;
+            display: flex; align-items: center; gap: 8px; margin: 0 auto 20px auto;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+            transition: transform 0.2s;
         }
-        .modal-content { 
-            background: white; 
-            width: 100%; 
-            max-width: 900px; 
-            border-radius: 20px; 
-            overflow: hidden; 
-            position: relative; 
-            animation: slideUp 0.3s ease-out; 
-            display: flex;
-            flex-direction: column;
-        }
+        .btn-map-nav:hover { transform: translateY(-2px); background: #2980b9; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
+        .modal-content { background: white; width: 100%; max-width: 900px; border-radius: 20px; overflow: hidden; position: relative; animation: slideUp 0.3s ease-out; display: flex; flex-direction: column; }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* ปุ่มปิดใหม่ - อยู่ที่มุมขวาบนของเนื้อหา และมีพื้นหลังชัดเจน */
-        .close-btn { 
-            position: absolute; 
-            top: 15px; 
-            right: 15px; 
-            width: 40px; 
-            height: 40px; 
-            background: white; 
-            border-radius: 50%; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            cursor: pointer; 
-            z-index: 2200; 
-            color: #333; 
-            font-size: 24px; 
-            border: none; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            line-height: 1;
-        }
+        .close-btn { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2200; color: #333; font-size: 24px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5); line-height: 1; }
         .close-btn:hover { background: #f0f0f0; transform: scale(1.1); }
 
         .slider-box { width: 100%; background: #000; position: relative; display: flex; align-items: center; justify-content: center; min-height: 300px; touch-action: pan-y; }
@@ -122,11 +97,24 @@
 
 <div class="container">
     <section id="homePage" class="page active">
-        <h2 style="text-align: center; margin-bottom: 25px;">รายการสินค้า</h2>
+        <h2 style="text-align: center; margin-bottom: 15px;">รายการสินค้า</h2>
+        
+        <button class="btn-map-nav" onclick="openGoogleMaps()">
+            📍 แผนที่ร้าน & นำทาง
+        </button>
+
         <div class="product-grid" id="gridCustomer"></div>
     </section>
 
     <section id="adminPage" class="page">
+        
+        <div class="admin-box" style="border-top-color: var(--map);">
+            <h3>📍 ตั้งค่าตำแหน่งร้าน</h3>
+            <p style="font-size:0.9rem; color:#666; margin-bottom:10px;">เลื่อนหมุดไปที่ตำแหน่งร้านของคุณ แล้วกดบันทึก</p>
+            <div id="mapPicker" class="map-container"></div>
+            <button class="btn-action" style="background: var(--map); margin-top:10px;" onclick="saveLocation()">บันทึกตำแหน่งร้าน</button>
+        </div>
+
         <div class="admin-box" id="adminBox">
             <h3 id="formTitle">⚙️ เพิ่มสินค้าใหม่</h3>
             <div id="editPhotosPreview" class="edit-photos-preview"></div>
@@ -153,6 +141,7 @@
                 </div>
             </div>
         </div>
+        <h3 style="margin-bottom: 15px;">รายการสินค้า (มุมมองแอดมิน)</h3>
         <div class="product-grid" id="gridAdmin"></div>
     </section>
 </div>
@@ -160,7 +149,6 @@
 <div id="itemModal" class="modal" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
         <button class="close-btn" onclick="closeModal()" aria-label="ปิด">✕</button>
-        
         <div class="slider-box" id="sliderBox">
             <button id="btnPrev" class="slide-nav" style="left:10px" onclick="changeSlide(-1)">❮</button>
             <img id="targetImg" src="">
@@ -173,9 +161,11 @@
     </div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, setDoc, getDoc, updateDoc } 
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, setDoc, getDoc, updateDoc, increment } 
     from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -196,18 +186,78 @@
     let currentPassword = "1234";
     let editId = null;
     let imagesInEdit = [];
+    
+    // Map Variables
+    let map = null;
+    let marker = null;
+    let shopLocation = { lat: 7.0086, lng: 100.4747 }; // Default Hat Yai (Odean area approx)
 
-    const loadPass = async () => {
+    // Load Config (Password + Location)
+    const loadConfig = async () => {
         const snap = await getDoc(configRef);
-        if (snap.exists()) currentPassword = snap.data().password;
+        if (snap.exists()) {
+            const d = snap.data();
+            if(d.password) currentPassword = d.password;
+            if(d.location) shopLocation = d.location;
+        }
     };
-    loadPass();
+    loadConfig();
 
+    // Map Functions
+    window.initMap = () => {
+        if(map) return; // Init only once
+        
+        // Create Map
+        map = L.map('mapPicker').setView([shopLocation.lat, shopLocation.lng], 15);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add Draggable Marker
+        marker = L.marker([shopLocation.lat, shopLocation.lng], {draggable: true}).addTo(map);
+
+        // Update variable when dragged
+        marker.on('dragend', function(e) {
+            const pos = marker.getLatLng();
+            shopLocation = { lat: pos.lat, lng: pos.lng };
+        });
+
+        // Click map to move marker
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            shopLocation = { lat: e.latlng.lat, lng: e.latlng.lng };
+        });
+    };
+
+    window.saveLocation = async () => {
+        try {
+            await setDoc(configRef, { location: shopLocation }, { merge: true });
+            alert("บันทึกตำแหน่งร้านเรียบร้อย! 📍");
+        } catch(e) { alert("Error: " + e.message); }
+    };
+
+    window.openGoogleMaps = () => {
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${shopLocation.lat},${shopLocation.lng}`;
+        window.open(url, '_blank');
+    };
+
+    // UI Logic
     window.showPage = (p) => {
         document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
         document.getElementById(p + 'Page').classList.add('active');
         document.getElementById('btnNavAdmin').style.display = p === 'home' ? 'block' : 'none';
         document.getElementById('btnNavHome').style.display = p === 'admin' ? 'block' : 'none';
+
+        // Fix Leaflet rendering issue when showing hidden div
+        if(p === 'admin') {
+            setTimeout(() => {
+                initMap();
+                map.invalidateSize(); // Force redraw
+                if(marker) marker.setLatLng([shopLocation.lat, shopLocation.lng]);
+                map.setView([shopLocation.lat, shopLocation.lng]);
+            }, 300);
+        }
     };
 
     window.promptAdmin = () => {
@@ -219,7 +269,7 @@
     window.changePassword = async () => {
         const np = document.getElementById('newPass').value;
         if(np && confirm("เปลี่ยนรหัส?")) {
-            await setDoc(configRef, { password: np });
+            await setDoc(configRef, { password: np }, { merge: true });
             currentPassword = np; alert("สำเร็จ!");
         }
     };
@@ -266,7 +316,7 @@
                 await updateDoc(doc(db, "products", editId), { name, desc, images: finalImages });
                 cancelEdit();
             } else {
-                await addDoc(colRef, { name, desc, images: finalImages, time: Date.now() });
+                await addDoc(colRef, { name, desc, images: finalImages, time: Date.now(), views: 0 });
                 clearForm();
             }
             alert("บันทึกสำเร็จ");
@@ -317,7 +367,9 @@
         const ga = document.getElementById('gridAdmin');
         gc.innerHTML = ga.innerHTML = "";
         snap.docs.forEach(d => {
-            const p = d.data(); const id = d.id;
+            const p = d.data(); 
+            const id = d.id;
+            p.id = id;
             
             const c1 = document.createElement('div');
             c1.className = 'card';
@@ -333,7 +385,10 @@
                     <button class="del-btn" onclick="deleteItem(event, '${id}')">✕</button>
                 </div>
                 <img src="${p.images[0]}" loading="lazy">
-                <div class="card-body"><h3>${p.name}</h3></div>`;
+                <div class="card-body">
+                    <h3>${p.name}</h3>
+                    <div class="view-badge">👁️ เข้าชม: <b>${p.views ? p.views.toLocaleString() : 0}</b></div>
+                </div>`;
             c2.onclick = () => openModal(p);
             ga.appendChild(c2);
         });
@@ -346,6 +401,9 @@
 
     let mImgs = []; let cIdx = 0; let tStart = 0;
     window.openModal = (p) => {
+        if(p.id) {
+            updateDoc(doc(db, "products", p.id), { views: increment(1) }).catch(console.error);
+        }
         mImgs = p.images; cIdx = 0;
         document.getElementById('targetTitle').innerText = p.name;
         document.getElementById('targetDesc').innerText = p.desc;
